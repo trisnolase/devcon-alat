@@ -1,0 +1,35 @@
+services:
+    www:
+        container_name: php
+        image: indrahulu/php:8.3
+        restart: always
+        depends_on:
+            - db
+        volumes:
+            - ..:/var/www/html
+        # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
+        # network_mode: service:db
+        # Use "forwardPorts" in **devcontainer.json** to forward an app port locally.
+        # (Adding the "ports" property to this file will not forward from a Codespace.)
+        ports:
+            - "8880:80"
+
+    db:
+        container_name: database
+        image: mariadb:11.3
+        restart: always
+        # command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
+        volumes:
+            - mariadb-data:/var/lib/mysql
+        ports:
+            - "3320:3306"
+        environment:
+            MARIADB_DATABASE: dbinventarisperalatan
+            MARIADB_USER: alat
+            MARIADB_PASSWORD: mypass
+            MARIADB_ROOT_PASSWORD: mypass
+        # Use "forwardPorts" in **devcontainer.json** to forward an app port locally.
+        # (Adding the "ports" property to this file will not forward from a Codespace.)
+
+volumes:
+    mariadb-data:
